@@ -6,6 +6,7 @@ ENV_DIR="$3"
 # load required environment variables
 GIT_REPO_URL=$(<"$ENV_DIR/GIT_REPO_URL")
 GIT_SSH_KEY=$(<"$ENV_DIR/GIT_SSH_KEY")
+GIT_SUBMODULE_PAT=$(<"$ENV_DIR/GIT_SUBMODULE_PAT")
 
 if [[ -z $GIT_REPO_URL ]]; then
     echo "Did you forget to set GIT_REPO_URL?"
@@ -13,6 +14,11 @@ if [[ -z $GIT_REPO_URL ]]; then
 fi
 
 if [[ -z $GIT_SSH_KEY ]]; then
+    echo "Did you forget to set GIT_SSH_KEY?"
+    exit 1
+fi
+
+if [[ -z $GIT_SUBMODULE_PAT ]]; then
     echo "Did you forget to set GIT_SSH_KEY?"
     exit 1
 fi
@@ -52,6 +58,10 @@ echo "-----> Installed SSH key from GIT_SSH_KEY"
 git fetch -q --depth 1 origin -a > /dev/null
 git checkout -q ${SOURCE_VERSION:-master} > /dev/null
 echo "-----> Fetched shallow history from $GIT_REPO_URL"
+
+# Include the PAT in the submodule url
+echo "-----> Adding PAT"
+sed -i -e "s/https:\/\/github.com/https:\/\/$GIT_SUBMODULE_PAT@github.com/" ./.gitmodules
 
 # initialize all the submodules
 git submodule -q update --init --recursive
