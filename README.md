@@ -16,7 +16,7 @@ This Heroku buildpack adds support for Git submodules **where access to the subm
 
 4. Set `GIT_SUBMODULE_PAT` to the personal access token used to access the shared submodule.
 
-        heroku config:set GIT_SUBMODULE_PAT="abc123"git ad
+        heroku config:set GIT_SUBMODULE_PAT="abc123"
 
 ## Limitations
 1. SSH Authentication only.
